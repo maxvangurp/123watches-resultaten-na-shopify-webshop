@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>__TITLE__ &middot; Aizy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #160D27;
+    --bg-deep: #0B0718;
+    --bg-soft: #250F4D;
+    --ink: #FFFFFF;
+    --ink-dim: rgba(255,255,255,0.72);
+    --ink-mute: rgba(255,255,255,0.45);
+    --purple: #6935CC;
+    --purple-2: #5623B3;
+    --violet: #9965F2;
+    --pink: #FF47D8;
+    --cyan: #5AF2FF;
+    --card: rgba(255,255,255,0.04);
+    --card-strong: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.12);
+    --grad: linear-gradient(90deg, #5623B3 0%, #FF47D8 51.7%, #5AF2FF 100%);
+    --grad-soft: linear-gradient(135deg, rgba(105,53,204,0.35), rgba(255,71,216,0.18) 60%, rgba(90,242,255,0.15));
+    --good: #5AF2FF;
+    --warn: #FFB547;
+    --red: #FF6B8A;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg-deep);
+    color: var(--ink);
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+  .display {
+    font-family: "Special Gothic Expanded One", "Plus Jakarta Sans", sans-serif;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.05;
+  }
+
+  /* Slide container */
+  .slide {
+    min-height: 100vh;
+    padding: 90px clamp(28px, 6vw, 120px) 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .slide.auto {
+    min-height: auto;
+    padding: 70px clamp(28px, 6vw, 120px);
+  }
+  .slide::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(800px 500px at 85% -10%, rgba(105,53,204,0.28), transparent 60%),
+      radial-gradient(700px 500px at -10% 110%, rgba(255,71,216,0.18), transparent 60%),
+      radial-gradient(600px 400px at 110% 110%, rgba(90,242,255,0.12), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .slide > * { position: relative; z-index: 1; }
+
+  /* Topbar */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px clamp(20px, 4vw, 40px);
+    background: rgba(11,7,24,0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .logo-img {
+    height: 28px;
+    width: auto;
+    display: block;
+  }
+
+  /* Typography helpers */
+  .eyebrow {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 22px;
+  }
+  .eyebrow .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--grad);
+    margin-right: 10px;
+    vertical-align: 1px;
+  }
+
+  h1.title {
+    font-family: "Special Gothic Expanded One", "Plus Jakarta Sans", sans-serif;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.05;
+    font-size: clamp(40px, 6.5vw, 92px);
+    margin: 0 0 24px;
+  }
+  h1.title .grad,
+  h2.heading .grad,
+  h3.sub .grad {
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  h2.heading {
+    font-family: "Special Gothic Expanded One", "Plus Jakarta Sans", sans-serif;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.05;
+    font-size: clamp(32px, 4.8vw, 60px);
+    margin: 0 0 20px;
+  }
+  h3.sub {
+    font-size: clamp(22px, 2.2vw, 30px);
+    margin: 40px 0 16px;
+    font-weight: 700;
+  }
+  p.lead {
+    font-size: clamp(16px, 1.25vw, 19px);
+    color: var(--ink-dim);
+    max-width: 880px;
+    margin: 0 0 24px;
+  }
+  p.body {
+    font-size: 16px;
+    color: var(--ink-dim);
+    max-width: 880px;
+    margin: 0 0 16px;
+  }
+  .meta {
+    color: var(--ink-mute);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .gradient-line {
+    height: 3px;
+    width: 120px;
+    background: var(--grad);
+    border-radius: 999px;
+    margin-bottom: 26px;
+  }
+
+  /* Cards grid */
+  .grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 26px;
+    backdrop-filter: blur(6px);
+  }
+  .card.accent {
+    background:
+      linear-gradient(135deg, rgba(105,53,204,0.35), rgba(255,71,216,0.15)),
+      var(--card-strong);
+    border: 1px solid rgba(255,71,216,0.35);
+  }
+  .card .label {
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+  .card h4 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .card p { margin: 0; color: var(--ink-dim); font-size: 14.5px; }
+  .card .big {
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-size: clamp(36px, 4vw, 60px);
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+  .card .value {
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-size: clamp(32px, 3.6vw, 52px);
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+  .card .sub {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+
+  .delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(90,242,255,0.12);
+    color: var(--cyan);
+    margin-top: 10px;
+    letter-spacing: 0.05em;
+  }
+  .delta.down { background: rgba(255,180,71,0.12); color: var(--warn); }
+
+  /* Findings list */
+  .findings {
+    display: grid;
+    gap: 14px;
+    margin-top: 8px;
+    max-width: 960px;
+  }
+  .finding {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 14px;
+    padding: 18px 22px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.025);
+    align-items: start;
+  }
+  .finding .ico {
+    width: 22px; height: 22px;
+    border-radius: 8px;
+    background: var(--grad);
+    display: inline-block;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .finding.warn .ico { background: linear-gradient(135deg, #FFB547, #FF6B8A); }
+  .finding.good .ico { background: linear-gradient(135deg, #5AF2FF, #9965F2); }
+  .finding h5 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .finding p { margin: 0; color: var(--ink-dim); font-size: 15px; }
+
+  /* Callout (subtle purple/cyan tint, use for Aanbeveling / Samengevat / Kernbevinding) */
+  .callout {
+    margin-top: 28px;
+    padding: 22px 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: linear-gradient(135deg, rgba(105,53,204,0.18), rgba(90,242,255,0.05));
+    font-size: 15px;
+    color: var(--ink-dim);
+    max-width: 960px;
+  }
+  .callout strong { color: var(--ink); font-weight: 700; }
+
+  /* Chapter header with big gradient number */
+  .chapter-head {
+    display: flex;
+    align-items: baseline;
+    gap: 22px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .chapter-head .num {
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-size: clamp(48px, 6vw, 90px);
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1;
+  }
+
+  /* Device / two-stat feature */
+  .device-stat {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 16px 0 8px;
+    max-width: 960px;
+  }
+  .device-stat .stat {
+    padding: 26px 28px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: var(--card);
+  }
+  .device-stat .stat.highlight {
+    background: linear-gradient(135deg, rgba(90,242,255,0.15), rgba(105,53,204,0.15));
+    border-color: rgba(90,242,255,0.35);
+  }
+  .device-stat .stat .small {
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+  }
+  .device-stat .stat .big {
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-size: clamp(36px, 4.5vw, 58px);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .device-stat .stat .hint {
+    font-size: 14px;
+    color: var(--ink-dim);
+  }
+  @media (max-width: 720px) {
+    .device-stat { grid-template-columns: 1fr; }
+  }
+
+  /* Summary action rows */
+  .sum-row {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 18px;
+    padding: 22px 0;
+    border-top: 1px solid var(--border);
+  }
+  .sum-row:last-child { border-bottom: 1px solid var(--border); }
+  .sum-row .num {
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-size: 22px;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sum-row h4 { margin: 0 0 6px; font-size: 20px; font-weight: 700; }
+  .sum-row p { margin: 0; color: var(--ink-dim); font-size: 15px; }
+
+  /* Platform header (Google / Meta / etc.) */
+  .platform {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 36px;
+  }
+  .platform-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: var(--grad-soft);
+    border: 1px solid var(--border);
+    font-family: "Special Gothic Expanded One", sans-serif;
+    font-size: 22px;
+  }
+  .platform h2 { margin: 0; }
+  .platform .sub { color: var(--ink-dim); font-size: 14px; margin-top: 4px; }
+
+  /* KPI table */
+  table.kpi {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 18px;
+    font-size: 14px;
+  }
+  table.kpi th, table.kpi td {
+    padding: 14px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  table.kpi th {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 600;
+  }
+  table.kpi td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.kpi td.pos { color: var(--cyan); font-weight: 700; }
+  table.kpi td.neg { color: var(--warn); font-weight: 700; }
+
+  /* Bar chart */
+  .bars {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 90px;
+    gap: 14px;
+    align-items: center;
+    font-size: 13px;
+  }
+  .bar-row .lbl { color: var(--ink-dim); }
+  .bar-row .track {
+    height: 14px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar-row .fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--grad);
+  }
+  .bar-row .val {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* Bullet list */
+  .bullets {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+    display: grid;
+    gap: 12px;
+  }
+  .bullets li {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 14px;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .bullets li::before {
+    content: "";
+    display: block;
+    width: 10px; height: 10px;
+    margin-top: 8px;
+    border-radius: 50%;
+    background: var(--grad);
+  }
+  .bullets li span { color: var(--ink-dim); }
+
+  /* Split layout for tables + cards */
+  .split {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 36px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .split { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 90px 1fr 70px; }
+  }
+
+  /* KPI pill list */
+  .kpi-row {
+    display: flex; gap: 18px; flex-wrap: wrap;
+    margin: 10px 0 4px;
+  }
+  .kpi-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+  .kpi-pill strong { color: var(--ink); font-weight: 700; }
+
+  /* CTA buttons */
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    border-radius: 999px;
+    background: var(--grad);
+    color: #0B0718;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .cta.ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--border);
+  }
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
+
+  /* Scroll hint */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--ink-mute);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .scroll-hint::after {
+    content: "";
+    width: 1px; height: 28px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+  }
+
+
+  /* === Responsive laag === */
+  body { overflow-x: hidden; }
+  h1.title, h2.heading, h3.sub { overflow-wrap: break-word; }
+
+  .table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 18px;
+  }
+  .table-wrap table.kpi { margin-top: 0; min-width: 480px; }
+  .table-wrap::-webkit-scrollbar { height: 6px; }
+  .table-wrap::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.18);
+    border-radius: 999px;
+  }
+
+  @media (max-width: 900px) {
+    .slide { padding: 76px 24px 56px; min-height: auto; }
+    .slide.auto { padding: 48px 24px; }
+    .split { gap: 28px; }
+    .grid { gap: 16px; }
+    h3.sub { margin: 28px 0 12px; }
+  }
+
+  @media (max-width: 720px) {
+    .card { padding: 20px; border-radius: 14px; }
+    .finding { padding: 15px 16px; grid-template-columns: 22px 1fr; gap: 12px; }
+    .callout { padding: 18px; margin-top: 20px; }
+    .device-stat .stat { padding: 20px; }
+    table.kpi { font-size: 13px; }
+    table.kpi th, table.kpi td { padding: 11px 9px; }
+    .bar-row { grid-template-columns: 84px 1fr 62px; gap: 10px; font-size: 12px; }
+    .kpi-row { gap: 10px; }
+    .bullets li { font-size: 15px; grid-template-columns: 20px 1fr; gap: 10px; }
+    .sum-row { grid-template-columns: 36px 1fr; gap: 12px; padding: 18px 0; }
+    .sum-row h4 { font-size: 17px; }
+    .chapter-head { gap: 14px; margin-bottom: 14px; }
+    .cta-row { gap: 10px; }
+    .cta { padding: 13px 20px; font-size: 12px; }
+  }
+
+  @media (max-width: 480px) {
+    .slide { padding: 72px 18px 48px; }
+    .slide.auto { padding: 40px 18px; }
+    h1.title { font-size: clamp(30px, 9vw, 44px); }
+    h2.heading { font-size: clamp(25px, 7.4vw, 36px); }
+    .card .value, .device-stat .stat .big { font-size: clamp(28px, 9vw, 38px); }
+    .grid { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 72px 1fr 54px; }
+    .eyebrow { letter-spacing: 0.2em; font-size: 11px; margin-bottom: 16px; }
+    .topbar { padding: 12px 18px; }
+    .logo-img { height: 24px; }
+    .scroll-hint { display: none; }
+    .cta, .cta.ghost { width: 100%; justify-content: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body { scroll-behavior: auto; }
+  }
+
+
+  /* === Interactie: hover en uitklap === */
+  .card, .finding, .device-stat .stat, .kpi-pill, .cta, .sum-row, .bar-row .fill {
+    transition: transform .22s ease, background .22s ease, border-color .22s ease, box-shadow .22s ease, filter .22s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,0.24);
+    box-shadow: 0 14px 34px rgba(0,0,0,0.32);
+  }
+  .card.accent:hover { border-color: rgba(255,71,216,0.55); }
+  .finding:hover {
+    background: rgba(255,255,255,0.055);
+    border-color: rgba(255,255,255,0.22);
+  }
+  .device-stat .stat:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,0.24);
+  }
+  .device-stat .stat.highlight:hover { border-color: rgba(90,242,255,0.6); }
+  .kpi-pill:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.24); }
+  .sum-row:hover { background: rgba(255,255,255,0.03); }
+  .cta:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(255,71,216,0.28); }
+  .cta.ghost:hover { background: rgba(255,255,255,0.06); box-shadow: none; }
+  .bar-row:hover .fill { filter: brightness(1.25); }
+
+  table.kpi tbody tr { transition: background .18s ease; }
+  table.kpi tbody tr:hover { background: rgba(255,255,255,0.05); }
+
+  /* Uitklapbaar detail */
+  details.more {
+    margin-top: 20px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.025);
+    max-width: 1100px;
+  }
+  details.more + details.more { margin-top: 12px; }
+  details.more > summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    transition: color .2s ease;
+  }
+  details.more > summary::-webkit-details-marker { display: none; }
+  details.more > summary::marker { content: ""; }
+  details.more > summary:hover { color: var(--ink); }
+  details.more > summary::before {
+    content: "";
+    flex: 0 0 auto;
+    width: 18px; height: 18px;
+    border-radius: 6px;
+    background: var(--grad);
+    position: relative;
+    transition: transform .25s ease;
+  }
+  details.more[open] > summary::before { transform: rotate(45deg); }
+  details.more > summary::after {
+    content: "Toon";
+    margin-left: auto;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-mute);
+  }
+  details.more[open] > summary::after { content: "Verberg"; }
+  .more-body {
+    padding: 2px 20px 22px;
+    color: var(--ink-dim);
+    font-size: 15px;
+  }
+  .more-body > *:first-child { margin-top: 0; }
+  .more-body p { margin: 0 0 12px; }
+  .more-body .table-wrap { margin-top: 6px; }
+  .more-body .bullets { margin-top: 0; }
+  .more-body .bullets li { font-size: 15px; }
+
+  @media (max-width: 720px) {
+    details.more > summary { padding: 13px 15px; font-size: 11px; letter-spacing: 0.12em; }
+    .more-body { padding: 2px 15px 18px; font-size: 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card, .finding, .device-stat .stat, .kpi-pill, .cta, .sum-row,
+    .bar-row .fill, table.kpi tbody tr, details.more > summary::before { transition: none; }
+    .card:hover, .device-stat .stat:hover, .cta:hover { transform: none; }
+  }
+
+  /* Footer */
+  footer {
+    padding: 44px clamp(20px, 4vw, 40px);
+    text-align: center;
+    color: var(--ink-mute);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="Aizy">
+    <svg class="logo-img" viewBox="270 440 530 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Aizy">
+      <g fill="#FFFFFF">
+        <ellipse cx="318" cy="599.1" rx="40.8" ry="40.8" transform="translate(-283.2 913.1) rotate(-89.6)"/>
+        <path d="M447.5,513.4c-9.4-5.9-28.5-6.2-45.6-5.1-16.3,1.1-31.4-8.3-37.6-23.5-6.5-15.9-15.2-32.9-24.6-38.8-19.2-12-44.4-6.1-56.4,13.1-12,19.2-6.1,44.5,13.1,56.4,9.4,5.9,28.5,6.2,45.6,5.1,16.3-1.1,31.4,8.3,37.6,23.5,6.5,15.9,15.2,32.9,24.6,38.8,19.2,12,44.4,6.1,56.4-13.1,12-19.2,6.1-44.5-13.1-56.4Z"/>
+      </g>
+      <g fill="#F2F2F2">
+        <path d="M789.8,489c0-2-1.5-3.4-4.1-3.4h-4v9.7h2.1v-3h2.2l1.9,3h2.1l-2.2-3.3c1.3-.5,1.9-1.6,1.9-3ZM785.6,490.7h-1.8v-3.4h1.8c1.4,0,2.2.6,2.2,1.7s-.8,1.7-2.2,1.7Z"/>
+        <path d="M785.3,481.8c-4.9,0-8.7,3.8-8.7,8.7s3.8,8.7,8.7,8.7,8.7-3.8,8.7-8.7-3.7-8.6-8.7-8.6ZM785.3,497.8c-4.2,0-7.3-3.2-7.3-7.3s3.1-7.3,7.3-7.3,7.2,3.2,7.2,7.3-3.2,7.4-7.3,7.4Z"/>
+        <path d="M696.2,610.5l2.8-18c2.3.5,4.7.7,7.1.8,5.7,0,8-2.3,8-6.8s-.6-4.9-3.6-14.1l-21.8-66.7h20.4l16.7,53.8,17-53.8h20l-23.7,73.5c-8,24.9-14.1,33.5-28.6,33.5-4.9,0-9.7-.7-14.4-2.2ZM496,545.3c.1-22.5,18.5-40.6,41-40.5.2,0,.4,0,.5,0,8.2,0,16.2,2.4,22.9,7.1v-6.3h19.3v78.6h-19.3v-5.2c-6.8,4.4-14.8,6.9-22.9,6.9-22.7.3-41.2-17.9-41.5-40.6,0,0,0,0,0,0ZM514.6,545.3c.1,12.7,10.5,22.8,23.1,22.7,12.5-.1,22.5-10.2,22.7-22.7-.1-12.7-10.5-22.8-23.1-22.7-12.5.1-22.5,10.2-22.7,22.7ZM616.3,584.2v-17.1l41.6-44.3h-39.6v-17.2h65.5v17.2l-41.6,44.3h44.4v17.1h-70.3ZM589.7,584.2v-78.6h19.5v78.6h-19.5ZM588.1,488.2c0-6.2,4.9-11.2,11.1-11.2,6.2,0,11.2,4.9,11.2,11.1,0,6.2-4.9,11.2-11.1,11.2,0,0,0,0,0,0-6.1,0-11.1-4.9-11.1-11.1,0,0,0,0,0,0Z"/>
+      </g>
+    </svg>
+  </a>
+</header>
+
+<section class="slide" id="top">
+  <div class="eyebrow"><span class="dot"></span>123watches &middot; 18 juni t/m 10 augustus 2026</div>
+  <h1 class="title">
+    Twee markten,<br>
+    <span class="grad">&eacute;&eacute;n</span> margeprobleem.
+  </h1>
+  <p class="lead">
+    Nederland draait op een MER van 4,57, Duitsland op 2,59, de groep op 2,76. Dat zijn gezonde cijfers. Het probleem zit er&oacute;nder: een kwart van jullie omzet gaat op aan korting op veertien artikelen, twee campagnes verliezen geld op Googles eigen cijfers, en de conversiemeting in het Nederlandse account laat een daling zien die niet bestaat.
+  </p>
+
+  <h3 class="sub">Wat ik nog van jullie nodig heb</h3>
+  <div class="split">
+    <div>
+      <div class="card">
+        <div class="label">Om de blended MER af te maken</div>
+        <ul class="bullets" style="margin-top: 14px;">
+          <li><div>Adtraction-export <span>met commissies en netwerkfee per maand</span></div></li>
+          <li><div>Microsoft Ads <span>draait dat, en zo ja welke spend</span></div></li>
+          <li><div>Onze fee <span>als jullie die meegerekend willen zien</span></div></li>
+          <li><div>Sellesay en print Amsterdam <span>kosten van die twee kanalen</span></div></li>
+          <li><div>Google Ads per week <span>b&eacute;ide accounts, 18 juni tot 10 augustus</span></div></li>
+          <li><div>Zijn er nog meer markten? <span>de Duitse shop verkoopt ook aan het VK en Belgi&euml;</span></div></li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="label">Voor de rest van de analyse</div>
+        <ul class="bullets" style="margin-top: 14px;">
+          <li><div>ProfitMetrics-export <span>met marge per artikel, dat is de bron onder PM POAS</span></div></li>
+          <li><div>Total sales by billing region <span>om Duitsland te kunnen beoordelen</span></div></li>
+          <li><div>Orders-export met betaalmethode <span>om het gat in de payment-data te sluiten</span></div></li>
+          <li><div>Voorraadstatus per variant <span>meerdere topartikelen staan als niet geschikt</span></div></li>
+          <li><div>Toegang tot de conversie-instellingen <span>daar zit het grootste probleem</span></div></li>
+          <li><div>Toegang tot de e-mailtool <span>GA4 ziet &euro;36.067, Shopify twee orders</span></div></li>
+          <li><div>De Duitse Shopify-export <span>zelfde rapporten als voor NL, dan kan ik beide markten gelijk doorrekenen</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="meta" style="margin-top: 28px;">Max &middot; Aizy</div>
+</section>
+
+<section class="slide" id="basis">
+  <div class="gradient-line"></div>
+  <h2 class="heading">Nu staat de <span class="grad">basis vast.</span></h2>
+  <p class="lead">
+    Ik reken met netto omzet uit Shopify, want dat is de enige teller die klopt: al excl. btw, al na kortingen en retouren. Over de 54 dagen sinds jullie echte livegang op 18 juni.
+  </p>
+
+  <div class="grid" style="margin-top: 28px; max-width: 1100px;">
+    <div class="card">
+      <div class="label">Netto omzet</div>
+      <div class="value">&euro;146.451</div>
+      <div class="sub">Excl. btw en verzending</div>
+    </div>
+    <div class="card">
+      <div class="label">Orders</div>
+      <div class="value">6.187</div>
+      <div class="sub">115 per dag &middot; 2,48 artikelen per order</div>
+    </div>
+    <div class="card">
+      <div class="label">Netto per order</div>
+      <div class="value">&euro;23,67</div>
+      <div class="sub">&euro;9,51 netto per artikel</div>
+    </div>
+    <div class="card accent">
+      <div class="label">Paid MER Nederland</div>
+      <div class="value">4,57</div>
+      <div class="sub">Duitsland draait apart op 2,59</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Correctie op mijn correctie:</strong> vorige week zette ik de Duitse advertentiekosten tegenover deze Nederlandse omzet en kwam ik op 2,63. Duitsland blijkt een eigen winkel met een eigen GA4-property en &euro;252.117 aan eigen omzet. De Nederlandse MER is dus 4,57. Hoofdstuk zes legt uit wat ik fout deed en wat er w&eacute;l uit die Duitse data komt.
+  </div>
+</section>
+
+<section class="slide auto" id="meting">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">01</div>
+    <div>
+      <h2 class="heading" style="margin:0;">De daling van 15% <span class="grad">bestaat niet.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    Google rapporteert over de laatste veertien dagen 15% minder conversies en 15% minder omzetwaarde. Ik heb precies dezelfde veertien dagen in Shopify gelegd. Daar staan meer orders en meer omzet.
+  </p>
+
+  <div class="device-stat">
+    <div class="stat">
+      <div class="small">Volgens Google Ads</div>
+      <div class="big">&minus;15,0%</div>
+      <div class="hint">Conversies en conversiewaarde &middot; ROAS van 2,54 naar 2,06</div>
+    </div>
+    <div class="stat highlight">
+      <div class="small">Volgens Shopify</div>
+      <div class="big">+4,7%</div>
+      <div class="hint">Netto omzet &middot; 1.707 orders tegen 1.651 in de veertien dagen ervoor</div>
+    </div>
+  </div>
+
+  <h3 class="sub">Waarom ik denk dat het meetverlies is</h3>
+  <div class="findings">
+    <div class="finding warn">
+      <div class="ico"></div>
+      <div>
+        <h5>Van de laatste conversie-upload kwam 42% binnen</h5>
+        <p>52% faalde omdat de conversieactie niet gevonden werd, nog eens 5% omdat de conversie zelf niet gevonden werd. Dat is exact het patroon dat een omzetdaling nabootst zonder dat er iets aan de hand is.</p>
+      </div>
+    </div>
+    <div class="finding warn">
+      <div class="ico"></div>
+      <div>
+        <h5>Er zijn twee primaire omzetacties</h5>
+        <p>PM Revenue Browser telt 1.303 conversies, PM Revenue Booster nog eens 263. Het doelenoverzicht toont daardoor 1.566 aankopen en de campagnetabel 1.303. Twee waarheden in hetzelfde account.</p>
+      </div>
+    </div>
+    <div class="finding warn">
+      <div class="ico"></div>
+      <div>
+        <h5>Add-to-cart en begin-checkout staan verkeerd ingesteld</h5>
+        <p>Het aankoopdoel heeft de status vereist aandacht. Alle conversies staat op 24.971 met &euro;262.992 waarde, inclusief 11.098 add-to-carts. Dat getal is voor sturing volstrekt onbruikbaar.</p>
+      </div>
+    </div>
+    <div class="finding good">
+      <div class="ico"></div>
+      <div>
+        <h5>Het verkeer is juist verbeterd</h5>
+        <p>Meer klikken (+9,7%) tegen een lagere CPC (&minus;4,3%). Als het echt slechter converterend verkeer was, zou Shopify dat laten zien. Dat doet het niet.</p>
+      </div>
+    </div>
+  </div>
+
+  <details class="more">
+    <summary>Alle meetproblemen op een rij</summary>
+    <div class="more-body">
+      <ul class="bullets">
+        <li><div>Aankoopdoel staat op <span>vereist aandacht.</span></div></li>
+        <li><div>Add-to-cart en begin-checkout <span>staan als verkeerd ingesteld gemarkeerd.</span></div></li>
+        <li><div>Verbeterde conversies hebben urgente meldingen, <span>al halen de primaire Browser-acties wel 99% dekking.</span></div></li>
+        <li><div>Alle conversies bevat 11.098 add-to-carts en 2.694 checkouts <span>plus overlappende revenue-, gross-profit-, new-customer- en LTV-acties. Vandaar die 24.971 conversies en &euro;262.992 waarde.</span></div></li>
+        <li><div>Consent Mode staat wel op excellent, <span>dus daar ligt het niet aan.</span></div></li>
+      </ul>
+      <p style="margin-top:14px;">De volgorde waarin ik dit aanpak: eerst uitzoeken waarom de conversieactie niet gevonden wordt bij de import, dan kiezen tussen Browser en Booster, dan pas de secundaire acties opschonen. Elke stap apart, zodat we kunnen zien wat welk effect heeft.</p>
+    </div>
+  </details>
+
+  <div class="callout">
+    <strong>Wat dit betekent:</strong> Smart Bidding stuurt op deze cijfers. Als het systeem 15% van de conversies niet ziet, gaat het bieden alsof de campagnes slechter presteren dan ze doen. Dit is voor mij prioriteit &eacute;&eacute;n, boven elke budgetverschuiving in dit deck.
+  </div>
+</section>
+
+<section class="slide auto" id="gads">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">02</div>
+    <div>
+      <h2 class="heading" style="margin:0;">Het NL-account, laatste <span class="grad">dertig dagen.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    12 juli tot 10 augustus, tegen de dertig dagen daarvoor. Dit gaat uitsluitend over Nederland en Belgi&euml;. Duitsland staat in een apart account en komt twee hoofdstukken verder. De spend blijft gelijk, het verkeer wordt goedkoper, en de gerapporteerde opbrengst zakt. Dat laatste hoort dus met een korrel zout gelezen te worden.
+  </p>
+
+  <div class="split">
+    <div>
+      <div class="table-wrap">
+        <table class="kpi">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th style="text-align:right;">30 dagen</th>
+              <th style="text-align:right;">Vorige 30</th>
+              <th style="text-align:right;">Verschil</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Kosten</td><td class="num">&euro;16.474</td><td class="num">&euro;16.591</td><td class="num">&minus;0,7%</td></tr>
+            <tr><td>Klikken</td><td class="num">20.681</td><td class="num">19.893</td><td class="num pos">+4,0%</td></tr>
+            <tr><td>CPC</td><td class="num">&euro;0,80</td><td class="num">&euro;0,84</td><td class="num pos">&minus;4,5%</td></tr>
+            <tr><td>Conversies</td><td class="num">1.303</td><td class="num">1.366</td><td class="num neg">&minus;4,6%</td></tr>
+            <tr><td>Kosten per conversie</td><td class="num">&euro;12,64</td><td class="num">&euro;12,15</td><td class="num neg">+4,0%</td></tr>
+            <tr><td>ROAS</td><td class="num">2,34</td><td class="num">2,41</td><td class="num neg">&minus;2,9%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout" style="margin-top: 20px;">
+        <strong>Branded hoort hier niet tussen:</strong> die 248 euro oogst zoekopdrachten waarin jullie eigen merknaam staat. Dat is vraag die al bestaat, grotendeels afkomstig van alles wat je er&oacute;m heen doet. Een ROAS van 24,71 zegt dus niets over hoe goed die campagne werkt, alleen dat je merkbekendheid hebt. Ik reken hem daarom uit elke vergelijking, maar hij blijft w&eacute;l gewoon in de MER staan, want het is echte spend.
+      </div>
+
+      <div class="callout" style="margin-top: 14px;">
+        <strong>De budgetmix is al verschoven:</strong> in mijn vorige deck stond dat 62% naar Performance Max ging. Over de laatste dertig dagen is dat 37% en gaat 51% naar Shopping. Jullie hebben Merkenlijst van &euro;100 naar &euro;180 per dag gebracht en MOF NL van &euro;120 naar &euro;50. Die beweging klopt.
+      </div>
+    </div>
+    <div>
+      <div class="table-wrap">
+        <table class="kpi">
+          <thead>
+            <tr>
+              <th>Cluster</th>
+              <th style="text-align:right;">Kosten</th>
+              <th style="text-align:right;">CPA</th>
+              <th style="text-align:right;">ROAS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Shopping</td><td class="num">&euro;8.351</td><td class="num">&euro;14,00</td><td class="num">2,01</td></tr>
+            <tr><td>Performance Max</td><td class="num">&euro;6.125</td><td class="num">&euro;14,72</td><td class="num">2,05</td></tr>
+            <tr><td>Search non-branded</td><td class="num">&euro;1.751</td><td class="num neg">&euro;18,43</td><td class="num neg">1,75</td></tr>
+            <tr><td><strong>Totaal zonder branded</strong></td><td class="num"><strong>&euro;16.226</strong></td><td class="num"><strong>&euro;14,64</strong></td><td class="num"><strong>2,00</strong></td></tr>
+            <tr><td colspan="4" style="color:var(--ink-mute);font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding-top:18px;">Apart, niet vergelijkbaar</td></tr>
+            <tr><td>Branded Search</td><td class="num">&euro;248</td><td class="num">&euro;1,27</td><td class="num">24,71</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <details class="more">
+        <summary>Apparaten en zoektermen</summary>
+        <div class="more-body">
+          <div class="table-wrap">
+            <table class="kpi">
+              <thead>
+                <tr><th>Apparaat</th><th style="text-align:right;">Kosten</th><th style="text-align:right;">CPA</th><th style="text-align:right;">ROAS</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Mobiel</td><td class="num">&euro;12.247</td><td class="num pos">&euro;12,12</td><td class="num pos">2,41</td></tr>
+                <tr><td>Desktop</td><td class="num">&euro;3.727</td><td class="num">&euro;14,09</td><td class="num">2,18</td></tr>
+                <tr><td>Tablet</td><td class="num">&euro;500</td><td class="num neg">&euro;17,87</td><td class="num neg">1,80</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin-top:14px;">Het zoektermenrapport telt 29.060 regels, samen &euro;10.786 spend en 933 conversies bij een CPA van &euro;11,56. Bovenaan zit weinig evident irrelevant verkeer, dus grootschalig uitsluiten is niet nodig. Wel deze uitschieters:</p>
+          <ul class="bullets">
+            <li><div>smartwatchbanden: <span>CPA &euro;54,94</span></div></li>
+            <li><div>horloge bandje apple watch in PMax NL: <span>CPA &euro;36,15</span></div></li>
+            <li><div>bandje apple watch in PMax BE: <span>CPA &euro;20,95, met vergelijkbare Belgische termen op &euro;44 tot &euro;49</span></div></li>
+          </ul>
+        </div>
+      </details>
+
+      <ul class="bullets" style="margin-top: 22px;">
+        <li><div>Search leek het sterkste cluster op 4,60. <span>Zonder branded is het met 1,75 juist het zwakste, onder Shopping en PMax. Die 4,60 was volledig een branded-artefact.</span></div></li>
+        <li><div>Performance Max is nauwelijks multichannel: <span>93% van de spend in NL loopt via Google Zoeken, in Belgi&euml; zelfs 98%. Je betaalt PMax-tarieven voor wat feitelijk Search is.</span></div></li>
+        <li><div>Het kanaalrapport meldt dat bij PMax NL <span>alle producten zijn uitgesloten, terwijl de campagne All products heet. Dat moet gecontroleerd worden.</span></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide auto" id="poas">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">03</div>
+    <div>
+      <h2 class="heading" style="margin:0;">Jullie hebben de marge <span class="grad">al in huis.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    Ik heb steeds om de brutomarge gevraagd, maar die zit al in het account. De kolom PM POAS staat er gewoon in, en die rekent met marge in plaats van met omzet. Bij POAS 1 speel je quitte. Daarmee wordt het beeld een ander.
+  </p>
+
+  <div class="table-wrap" style="max-width: 1000px;">
+    <table class="kpi">
+      <thead>
+        <tr>
+          <th>Campagne</th>
+          <th style="text-align:right;">ROAS</th>
+          <th style="text-align:right;">PM POAS</th>
+          <th style="text-align:right;">Oordeel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Brand Only tROAS-test</td><td class="num">2,12</td><td class="num pos">1,20</td><td class="num pos">Uitrollen</td></tr>
+        <tr><td>Shopping Merkenlijst</td><td class="num">2,09</td><td class="num pos">1,19</td><td class="num">Behouden</td></tr>
+        <tr><td>PMax Belgi&euml;</td><td class="num">1,91</td><td class="num">1,00</td><td class="num">Break-even</td></tr>
+        <tr><td>Shopping Brand Only</td><td class="num">1,95</td><td class="num neg">0,93</td><td class="num neg">Verlieslatend</td></tr>
+        <tr><td>Search Apple MOF BE</td><td class="num">1,65</td><td class="num neg">0,91</td><td class="num neg">Verlieslatend</td></tr>
+        <tr><td colspan="4" style="color:var(--ink-mute);font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding-top:18px;">Apart, niet vergelijkbaar</td></tr>
+        <tr><td>Branded Search NL</td><td class="num">27,97</td><td class="num">16,48</td><td class="num">Eigen budget</td></tr>
+        <tr><td>Branded Search BE</td><td class="num">9,62</td><td class="num">5,18</td><td class="num">Eigen budget</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <details class="more">
+    <summary>Waarom branded altijd apart hoort</summary>
+    <div class="more-body">
+      <p>Branded Search vangt mensen die jullie naam al intypen. Die vraag is er dankzij alles wat je er&oacute;mheen doet: Shopping, PMax, Meta, e-mail, mond-tot-mond en de verpakking in de brievenbus. Branded krijgt in de rapportage de credits voor de laatste klik, maar heeft de vraag niet gemaakt.</p>
+      <p>Daar volgen drie regels uit. Je vergelijkt branded nooit met een prospectiecampagne, want de een oogst en de ander zaait. Je verschuift nooit budget n&aacute;&aacute;r branded, want die campagne wordt niet groter door meer geld, alleen door meer merkbekendheid. En je rekent branded uit je accountgemiddelden, anders verstopt het waar het werkelijk misgaat.</p>
+      <p>Hoe groot dat effect hier is: met branded erin staat de account op ROAS 2,34 en CPA &euro;12,64. Zonder branded op 2,00 en &euro;14,64. Branded is 1,5% van het budget en 15,9% van de gerapporteerde waarde.</p>
+      <p>Wat branded w&eacute;l verdient is een eigen doel: onbeperkt budget op een lage tROAS, puur om te voorkomen dat concurrenten op jullie naam bieden. En een eigen vraag in de maandrapportage, namelijk of het branded volume gr&oacute;eit. Dat is de echte graadmeter voor of de rest van je marketing werkt.</p>
+    </div>
+  </details>
+
+  <details class="more">
+    <summary>Hoe POAS werkt en waarom het hier beter past</summary>
+    <div class="more-body">
+      <p>ROAS deelt omzet door spend. POAS deelt brutowinst door spend. Bij POAS 1 speel je quitte op mediakosten, dus alles daaronder kost geld en alles daarboven verdient. Het verschil tussen die twee wordt groter naarmate de marge per artikel meer uiteenloopt, en dat is bij jullie precies het geval: &euro;2,36 netto op het ene bandje tegenover &euro;12,01 op het andere.</p>
+      <p>Waar ik op let bij het overzetten naar POAS-sturing: de marge in ProfitMetrics moet inkoopprijs &eacute;n transactiekosten bevatten, anders stuur je alsnog te ruim. Bij jullie is dat 2,86% gemiddeld en 4,16% op Klarna, dus dat scheelt op &euro;23,67 netto per order zo&rsquo;n 70 cent tot een euro.</p>
+      <p>Belangrijk: zolang de conversie-import faalt, zijn ook de POAS-cijfers vervuild. Deze tabel is dus een rangorde die klopt, met absolute waarden die na de meetfix opnieuw bekeken moeten worden.</p>
+    </div>
+  </details>
+
+  <div class="callout">
+    <strong>Kijk naar de twee middelste regels:</strong> Shopping Brand Only heeft een h&oacute;gere ROAS dan PMax Belgi&euml; (1,95 tegen 1,91) maar een l&aacute;gere POAS (0,93 tegen 1,00). Precies het omslagpunt waar omzet sturen en marge sturen tegengestelde antwoorden geven. Dit is het beste argument voor het feedlabel op netto bijdrage dat verderop staat: als het algoritme de marge niet kent, koopt het volume op de verkeerde artikelen.
+  </div>
+</section>
+
+<section class="slide auto" id="korting">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">04</div>
+    <div>
+      <h2 class="heading" style="margin:0;">Veertien artikelen kosten jullie <span class="grad">&euro;30.932.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    Van &euro;194.994 bruto omzet gaat &euro;45.684 op aan korting, bijna een kwart. Veertien artikelen zijn goed voor twee derde van dat bedrag. En het mooie is: het productrapport uit Google bevestigt het onafhankelijk.
+  </p>
+
+  <div class="device-stat">
+    <div class="stat">
+      <div class="small">De veertien met 60%+ korting</div>
+      <div class="big">&euro;3,65</div>
+      <div class="hint">Netto per verkocht artikel &middot; 4.036 stuks, 26% van je volume</div>
+    </div>
+    <div class="stat highlight">
+      <div class="small">De 387 zonder korting</div>
+      <div class="big">&euro;12,74</div>
+      <div class="hint">Netto per verkocht artikel &middot; 3,5 keer zoveel per stuk</div>
+    </div>
+  </div>
+
+  <div class="split" style="margin-top: 30px;">
+    <div>
+      <div class="table-wrap">
+        <table class="kpi">
+          <thead>
+            <tr>
+              <th>Artikel</th>
+              <th style="text-align:right;">Korting</th>
+              <th style="text-align:right;">Netto p/st</th>
+              <th style="text-align:right;">ROAS Google</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Nylon gevlochten solo</td><td class="num pos">3,0%</td><td class="num pos">&euro;12,01</td><td class="num pos">2,30</td></tr>
+            <tr><td>Osvo Cape Cod blauw</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td class="num pos">2,57</td></tr>
+            <tr><td>Flyne zwart</td><td class="num neg">60,3%</td><td class="num neg">&euro;5,08</td><td class="num neg">1,69</td></tr>
+            <tr><td>Flyne sterrenlicht</td><td class="num neg">69,8%</td><td class="num neg">&euro;3,93</td><td class="num neg">0,91</td></tr>
+            <tr><td>Ovaro zwart</td><td class="num neg">77,0%</td><td class="num neg">&euro;2,36</td><td class="num">&ndash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="body" style="margin-top:18px;">
+        Twee onafhankelijke bronnen wijzen dezelfde artikelen aan. Het bandje met de laagste korting heeft de hoogste netto opbrengst per stuk &eacute;n een gezonde ROAS. De zwaarst afgeprijsde variant staat op ROAS 0,91 en verliest dus geld bij elke klik.
+      </p>
+    </div>
+    <div>
+      <div class="table-wrap">
+        <table class="kpi">
+          <thead>
+            <tr>
+              <th>Kortingsniveau</th>
+              <th style="text-align:right;">Artikelen</th>
+              <th style="text-align:right;">Weggegeven</th>
+              <th style="text-align:right;">Netto over</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0 tot 5%</td><td class="num">387</td><td class="num pos">&euro;1.865</td><td class="num">&euro;93.943</td></tr>
+            <tr><td>5 tot 20%</td><td class="num">99</td><td class="num">&euro;2.104</td><td class="num">&euro;23.006</td></tr>
+            <tr><td>20 tot 40%</td><td class="num">23</td><td class="num">&euro;3.998</td><td class="num">&euro;7.775</td></tr>
+            <tr><td>40 tot 60%</td><td class="num">9</td><td class="num">&euro;6.785</td><td class="num">&euro;7.543</td></tr>
+            <tr><td><strong>60% en meer</strong></td><td class="num"><strong>14</strong></td><td class="num neg"><strong>&euro;30.932</strong></td><td class="num"><strong>&euro;14.720</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <details class="more">
+        <summary>GA4 laat zien wat de korting precies koopt</summary>
+        <div class="more-body">
+          <p>Het productrapport uit GA4 geeft per artikel hoeveel mensen het bekeken, in de winkelwagen legden en kochten. Zet je dat naast het kortingspercentage, dan is het verband onmiskenbaar.</p>
+          <div class="table-wrap">
+            <table class="kpi">
+              <thead>
+                <tr><th>Artikel</th><th style="text-align:right;">Korting</th><th style="text-align:right;">In winkelwagen</th><th style="text-align:right;">Omzet per view</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Ovaro siliconen zwart</td><td class="num neg">77,0%</td><td class="num">47,2%</td><td class="num">&euro;1,53</td></tr>
+                <tr><td>Vyon siliconen lichtroze</td><td class="num neg">62,8%</td><td class="num">46,6%</td><td class="num">&euro;1,22</td></tr>
+                <tr><td>Flyne nylon sterrenlicht</td><td class="num neg">69,8%</td><td class="num">28,0%</td><td class="num">&euro;1,19</td></tr>
+                <tr><td>Ovaro siliconen sterrenlicht</td><td class="num neg">64,1%</td><td class="num">26,8%</td><td class="num">&euro;0,88</td></tr>
+                <tr><td>Rivaro stalen zwart</td><td class="num pos">2,5%</td><td class="num">16,7%</td><td class="num pos">&euro;1,74</td></tr>
+                <tr><td>Nylon gevlochten solo</td><td class="num pos">3,0%</td><td class="num">13,9%</td><td class="num">&euro;0,62</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin-top:14px;">De korting koopt winkelwagens, geen omzet. Ovaro zwart wordt door bijna de helft van de kijkers in de winkelwagen gelegd, drie keer zo vaak als het Rivaro-bandje. Toch levert Rivaro met 2,5% korting m&eacute;&eacute;r omzet per view op. En dan is dit nog bruto: netto houdt Ovaro zwart &euro;2,36 per stuk over en Rivaro ruim vier keer zoveel.</p>
+        </div>
+      </details>
+
+      <details class="more">
+        <summary>De rekensom achter de prijstest</summary>
+        <div class="more-body">
+          <p>Neem Ovaro siliconen zwart: 995 stuks verkocht, bruto &euro;10,41 per stuk, 77% korting, dus &euro;2,36 netto. Halveer je de korting naar 38,5%, dan gaat de netto opbrengst naar circa &euro;6,40 per stuk.</p>
+          <p>Bij gelijk volume levert dat &euro;6.368 op in plaats van &euro;2.347. Zelfs als je de helft van je volume verliest, kom je op &euro;3.184 uit en dus nog steeds ruim boven de huidige opbrengst. Pas bij meer dan 63% volumeverlies word je slechter af.</p>
+          <p>Dat is waarom ik hier een test durf aan te bevelen zonder de elasticiteit te kennen: de marge voor fouten is enorm. En de controlegroep van zeven artikelen zorgt dat we seizoenseffecten eruit kunnen filteren.</p>
+        </div>
+      </details>
+
+      <div class="callout" style="margin-top: 20px;">
+        <strong>Extra risico:</strong> uit het Google-rapport blijkt dat meerdere hoger bestedende artikelen inmiddels als niet op voorraad of niet geschikt staan, en dat Sleutelhangers 53% minder klikken kreeg. Voorraad en variantenfeed zijn dus een eigen actiepunt.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide auto" id="kortingopties">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">05</div>
+    <div>
+      <h2 class="heading" style="margin:0;">Vier routes uit die <span class="grad">kortingsval.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    Ze sluiten elkaar niet uit, maar ze hebben wel een volgorde. Ik zou met route 1 en 2 tegelijk beginnen, want die kosten geen omzet en leveren binnen twee weken data op.
+  </p>
+
+  <div class="grid" style="margin-top: 26px;">
+    <div class="card accent">
+      <div class="label">Route 01 &middot; Meten</div>
+      <h4>Prijstest met controlegroep</h4>
+      <p>Halveer de korting op zeven van de veertien, laat de andere zeven staan. Na twee weken weet je de prijselasticiteit in plaats van hem te gokken. Zelfs bij 30% volumeverlies stijgt de netto omzet.</p>
+    </div>
+    <div class="card accent">
+      <div class="label">Route 02 &middot; Sturen</div>
+      <h4>Feedlabel op netto bijdrage</h4>
+      <p>Zet per artikel een custom label met de netto opbrengst per stuk. Jullie hebben die data al via ProfitMetrics, dus dit is vooral een koppeling en geen onderzoek. Daarmee kun je laag bieden op de &euro;2 tot &euro;4 groep en agressief op de &euro;12 groep.</p>
+    </div>
+    <div class="card">
+      <div class="label">Route 03 &middot; Verschuiven</div>
+      <h4>Korting naar de drempel</h4>
+      <p>Vervang productkorting door een drempel op ordeniveau. Jullie zitten op 2,48 artikelen per order, dus de bereidheid om te stapelen is er. Zo betaal je voor een hogere AOV in plaats van voor een lagere prijs.</p>
+    </div>
+    <div class="card">
+      <div class="label">Route 04 &middot; Afschermen</div>
+      <h4>Uit betaald, in organisch</h4>
+      <p>Houd de zwaarst afgeprijsde artikelen buiten Shopping en pMax, maar laat ze wel vindbaar op de site. Ze blijven werken als instapproduct zonder dat je er klikkosten voor betaalt.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Mijn advies:</strong> begin bij route 2. De POAS-cijfers bewijzen dat het werkt, want de Brand Only-test met een eigen tROAS haalt POAS 1,20 tegenover 0,93 voor de basiscampagne. Dat is precies het effect dat je accountbreed wilt.
+  </div>
+</section>
+
+<section class="slide auto" id="duitsland">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">06</div>
+    <div>
+      <h2 class="heading" style="margin:0;">Duitsland is een <span class="grad">eigen winkel.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    Ik moet hier een correctie op mijn correctie maken. Vorige week zette ik de Duitse advertentiekosten tegenover de Nederlandse omzet, en dat was fout. Er is een tweede GA4-property, een eigen domein en een eigen omzet van &euro;252.117. Beide markten hebben dus hun eigen MER, en die van Nederland gaat terug naar 4,57.
+  </p>
+
+  <div class="table-wrap" style="max-width: 1000px;">
+    <table class="kpi">
+      <thead>
+        <tr>
+          <th>Markt</th>
+          <th style="text-align:right;">Omzet</th>
+          <th style="text-align:right;">Mediaspend</th>
+          <th style="text-align:right;">MER</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Nederland en Belgi&euml;</td><td class="num">&euro;436.157</td><td class="num">&euro;152.247</td><td class="num pos">2,86</td></tr>
+        <tr><td>Duitsland</td><td class="num">&euro;252.117</td><td class="num">&euro;97.492</td><td class="num">2,59</td></tr>
+        <tr><td><strong>Groep</strong></td><td class="num"><strong>&euro;688.274</strong></td><td class="num"><strong>&euro;249.738</strong></td><td class="num"><strong>2,76</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="body" style="margin-top:14px;">
+    Beide kolommen komen uit GA4 over 1 januari tot 10 augustus, dus dit is appels met appels. GA4 telt structureel iets minder omzet dan de winkelbackend, dus dit zijn conservatieve cijfers.
+  </p>
+
+  <div class="split" style="margin-top: 30px;">
+    <div>
+      <h3 class="sub" style="margin-top:0;">Wat er wel klopte</h3>
+      <div class="findings">
+        <div class="finding warn">
+          <div class="ico"></div>
+          <div>
+            <h5>Shopping DE en non-branded Search DE verliezen geld</h5>
+            <p>ROAS 0,55 en 0,92 op Googles eigen cijfers, samen &euro;6.600 spend voor &euro;4.683 waarde. En het zijn precies de twee campagnes die niet in de export staan. Pauzeren blijft het advies.</p>
+          </div>
+        </div>
+        <div class="finding warn">
+          <div class="ico"></div>
+          <div>
+            <h5>Dezelfde meldingen als in Nederland</h5>
+            <p>Bij alle drie de Duitse PMax-campagnes staat dat offline conversiegegevens de prestaties be&iuml;nvloeden, en bij twee dat producten zijn uitgesloten. Dat is dus geen Nederlands probleem maar een groepsbreed probleem.</p>
+          </div>
+        </div>
+        <div class="finding good">
+          <div class="ico"></div>
+          <div>
+            <h5>Duitsland converteert net zo goed als Nederland</h5>
+            <p>Paid Search levert daar &euro;1,44 per sessie op tegen &euro;1,42 in Nederland. De markt is dus niet zwakker, de campagnestructuur eromheen wel.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3 class="sub" style="margin-top:0;">Wat er nieuw uitkomt</h3>
+      <div class="findings">
+        <div class="finding warn">
+          <div class="ico"></div>
+          <div>
+            <h5>40.524 Duitsers landen op de Nederlandse winkel</h5>
+            <p>Terwijl er een eigen Duitse shop draait. In de Shopify-landingspagina&rsquo;s staan bovendien Duitstalige URL&rsquo;s zoals /collections/apple-watch-armbaender. Je hebt dus twee Duitse etalages die elkaar beconcurreren.</p>
+          </div>
+        </div>
+        <div class="finding good">
+          <div class="ico"></div>
+          <div>
+            <h5>E-mail is ook in Duitsland het sterkste kanaal per sessie</h5>
+            <p>&euro;1,83 per sessie op 17.578 sessies, hoger dan Paid Search. Samen met Nederland is dat &euro;68.306 aan omzet uit een kanaal dat vrijwel niets kost.</p>
+          </div>
+        </div>
+        <div class="finding good">
+          <div class="ico"></div>
+          <div>
+            <h5>De Duitse shop verkoopt ook buiten Duitsland</h5>
+            <p>&euro;23.597 naar het Verenigd Koninkrijk en &euro;13.311 naar Belgi&euml;. Dat is 15% van de omzet uit markten waar geen campagne op draait.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <details class="more">
+    <summary>Wat ik vorige week fout had, en waarom</summary>
+    <div class="more-body">
+      <p>Ik zag een Duits Google Ads-account van &euro;97.492 en constateerde dat de Shopify-winkel 40.524 Duitse sessies had. De CPC van &euro;0,71 maal die sessies kwam bijna exact uit op de pro rata Duitse spend, dus concludeerde ik dat het Duitse account naar dezelfde winkel stuurde. Daarmee kwam de MER op 2,63.</p>
+      <p>Die rekensom klopte, maar de conclusie niet. Er &iacute;s Duits verkeer op de Nederlandse winkel, alleen komt dat grotendeels ergens anders vandaan. Het Duitse account stuurt naar een aparte Duitse shop, met een eigen domein, een eigen URL-structuur en een eigen GA4-property.</p>
+      <p>De les die ik hieruit trek en die ik hier ook maar gewoon opschrijf: een kruiscontrole die uitkomt is geen bewijs. Twee getallen die op elkaar lijken kunnen dezelfde oorzaak hebben zonder dat het ene het andere verklaart. Ik had moeten vragen of er een tweede property was v&oacute;&oacute;rdat ik de MER halveerde.</p>
+      <p>De praktische gevolgen: de Nederlandse MER is 4,57 en niet 2,63. De groeps-MER is 2,76. En het echte werk zit niet in het herrekenen maar in de twee Duitse campagnes die geld verliezen en de dubbele Duitse etalage.</p>
+    </div>
+  </details>
+</section>
+
+<section class="slide auto" id="funnel">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">07</div>
+    <div>
+      <h2 class="heading" style="margin:0;">De checkout lekt <span class="grad">een derde.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    Een conversieratio van 4,49% is voor deze categorie sterk, dus daar zit het probleem niet. Het verlies zit onderin de trechter, en dat is precies het deel dat we zonder mediabudget kunnen repareren.
+  </p>
+
+  <div class="split">
+    <div>
+      <div class="table-wrap">
+        <table class="kpi">
+          <thead>
+            <tr>
+              <th>Stap</th>
+              <th style="text-align:right;">Sessies</th>
+              <th style="text-align:right;">Van totaal</th>
+              <th style="text-align:right;">Van vorige</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Sessies</td><td class="num">121.828</td><td class="num">100%</td><td class="num">&ndash;</td></tr>
+            <tr><td>In winkelwagen</td><td class="num">13.810</td><td class="num">11,34%</td><td class="num">11,3%</td></tr>
+            <tr><td>Checkout bereikt</td><td class="num">8.033</td><td class="num">6,59%</td><td class="num neg">58,2%</td></tr>
+            <tr><td>Checkout voltooid</td><td class="num">5.476</td><td class="num">4,49%</td><td class="num neg">68,2%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout" style="margin-top: 20px;">
+        <strong>De rekensom:</strong> 2.557 mensen bereiken de checkout en rekenen niet af. Bij &euro;23,67 netto per order is dat &euro;60.500 aan potentie in 54 dagen. Halveer dat verlies en je verdient meer dan het hele Meta-budget terug.
+      </div>
+    </div>
+    <div>
+      <h3 class="sub" style="margin-top:0;">Wat ik zou testen, op volgorde</h3>
+      <div class="findings">
+        <div class="finding warn">
+          <div class="ico"></div>
+          <div>
+            <h5>Tablet eerst, want daar is het bewijs het hardst</h5>
+            <p>In Google Ads is tablet het zwakste apparaat: CPA &euro;17,87 en ROAS 1,80, tegen &euro;12,12 en 2,41 op mobiel. Bij gelijk verkeer wijst dat op een checkout die daar niet lekker loopt.</p>
+          </div>
+        </div>
+        <div class="finding warn">
+          <div class="ico"></div>
+          <div>
+            <h5>Verzendkosten eerder tonen</h5>
+            <p>Van winkelwagen naar checkout valt 42% weg, een groter gat dan de checkout zelf. Er wordt gemiddeld &euro;1,61 verzendkosten per order gerekend, dus er is een drempel. Toon in de winkelwagen hoeveel er nog te gaan is.</p>
+          </div>
+        </div>
+        <div class="finding good">
+          <div class="ico"></div>
+          <div>
+            <h5>Express checkout op mobiel</h5>
+            <p>Mobiel is 67% van het verkeer en draagt in Google 78% van de conversies. Shop Pay en Apple Pay boven de formuliervelden halen de helft van de invulstappen weg.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide auto" id="attributie">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">08</div>
+    <div>
+      <h2 class="heading" style="margin:0;">Wat platforms claimen, en wat <span class="grad">Shopify ziet.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    Nu er twee onafhankelijke bronnen liggen, is de overlap zichtbaar. De waarheid ligt ertussenin, en dat is precies waarom wij op blended MER sturen in plaats van op platform-ROAS.
+  </p>
+
+  <div class="split">
+    <div>
+      <div class="table-wrap">
+        <table class="kpi">
+          <thead>
+            <tr>
+              <th>Bron</th>
+              <th style="text-align:right;">Orders</th>
+              <th style="text-align:right;">Netto omzet</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Google (search)</td><td class="num">2.803</td><td class="num">&euro;62.112</td></tr>
+            <tr><td>Direct, geen bron</td><td class="num">1.852</td><td class="num">&euro;45.406</td></tr>
+            <tr><td>123watches (eigen domein)</td><td class="num">1.073</td><td class="num">&euro;26.707</td></tr>
+            <tr><td>Shopify (Shop app)</td><td class="num">225</td><td class="num">&euro;6.510</td></tr>
+            <tr><td>Facebook en Instagram</td><td class="num">123</td><td class="num">&euro;2.594</td></tr>
+            <tr><td>Affiliate en couponsites</td><td class="num">70</td><td class="num">&euro;1.936</td></tr>
+            <tr><td>Bing</td><td class="num">29</td><td class="num">&euro;737</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h3 class="sub" style="margin-top:0;">De verschillen</h3>
+      <p class="body">Per markt apart, want de accounts en de winkels horen bij elkaar.</p>
+      <ul class="bullets">
+        <li><div>Meta claimt 423 aankopen, <span>Shopify schrijft er 123 toe aan Facebook en Instagram. Een factor 3,4.</span></div></li>
+        <li><div>Het NL-account claimt over deze 64 dagen <span>3.842 conversies en &euro;102.804 aan waarde. Dat is 62% van alle 6.220 orders en 70% van de netto omzet, uit een kanaal dat 45% van de sessies levert.</span></div></li>
+        <li><div>GA4 geeft de factor: <span>&euro;280.211 aan betaalde Google-omzet tegenover &euro;356.602 die het account claimt. Een factor 1,27.</span></div></li>
+        <li><div>In Duitsland is die factor 1,24, <span>dus vrijwel gelijk. Het is geen accountspecifieke fout maar de normale afstand tussen platformattributie en last-click.</span></div></li>
+        <li><div>Bijna de helft van de orders <span>heeft geen bruikbare bron: 1.852 direct plus 1.073 via het eigen domein.</span></div></li>
+      </ul>
+      <details class="more">
+        <summary>Conversieratio per kanaal</summary>
+        <div class="more-body">
+          <div class="table-wrap">
+            <table class="kpi">
+              <thead>
+                <tr><th>Kanaal</th><th style="text-align:right;">Sessies</th><th style="text-align:right;">CR</th><th style="text-align:right;">Omzet per sessie</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Eigen domein</td><td class="num">2.507</td><td class="num">42,80%</td><td class="num">&euro;10,65</td></tr>
+                <tr><td>Bing</td><td class="num">442</td><td class="num pos">6,56%</td><td class="num pos">&euro;1,67</td></tr>
+                <tr><td>Google (search)</td><td class="num">58.988</td><td class="num pos">4,75%</td><td class="num">&euro;1,05</td></tr>
+                <tr><td>Direct</td><td class="num">49.225</td><td class="num">3,76%</td><td class="num">&euro;0,92</td></tr>
+                <tr><td>Instagram</td><td class="num">1.454</td><td class="num neg">2,75%</td><td class="num neg">&euro;0,62</td></tr>
+                <tr><td>Facebook</td><td class="num">4.729</td><td class="num neg">1,86%</td><td class="num neg">&euro;0,38</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin-top:14px;">Die 42,80% op het eigen domein is het bewijs. Niemand converteert op 43%, dus dat is geen verkeer maar een terugkeer vanaf een betaalpagina.</p>
+        </div>
+      </details>
+
+      <div class="callout" style="margin-top: 20px;">
+        <strong>GA4 geeft de factor die ik miste:</strong> Google rapporteert in beide markten ongeveer 1,25 keer wat GA4 op last-click toeschrijft. Dat is een normale marge en veel geruststellender dan het beeld dat ik vorige week schetste, toen ik per ongeluk de Duitse claim tegen de Nederlandse omzet legde. Waar het w&eacute;l scheef zit is niet in de hoogte maar in de betrouwbaarheid: het NL-account meldt een daling van 15% die in de winkeldata niet bestaat.
+      </div>
+
+      <div class="callout" style="margin-top: 14px;">
+        <strong>Hier word ik enthousiast van:</strong> 1.073 orders komen binnen met jullie eigen domein als verwijzer. Dat patroon zie ik bijna altijd bij een terugkeer vanaf een externe betaalpagina. Dezelfde gateway die in de payment-export ontbrak, wist hier de bron. Een fix van een uur, en daarna is 17% van jullie omzet weer toewijsbaar.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide auto" id="verkeer">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">09</div>
+    <div>
+      <h2 class="heading" style="margin:0;">Niet al je verkeer is <span class="grad">echt verkeer.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    Toen ik de sessies per kanaal tegen de orders per kanaal legde, vielen twee posten op die samen 13.492 sessies vertegenwoordigen en vrijwel geen omzet. Dat is 11% van je verkeer, en het drukt elk conversiecijfer waar je op stuurt.
+  </p>
+
+  <div class="device-stat">
+    <div class="stat">
+      <div class="small">secprf2 als verwijzer</div>
+      <div class="big">1</div>
+      <div class="hint">Order op 4.722 sessies &middot; een conversieratio van 0,02%</div>
+    </div>
+    <div class="stat">
+      <div class="small">Verkeer uit datacenters</div>
+      <div class="big">8.770</div>
+      <div class="hint">Sessies uit de VS &middot; San Jose, Council Bluffs, Ashburn en Dallas</div>
+    </div>
+  </div>
+
+  <h3 class="sub">Wat ik hiervan denk</h3>
+  <div class="findings">
+    <div class="finding warn">
+      <div class="ico"></div>
+      <div>
+        <h5>secprf2 stuurt 3,8% van je verkeer en levert niets</h5>
+        <p>De naam lijkt op een redirect- of trackingdomein. Het staat in hetzelfde rijtje als srvtrck en aytz5f-f0, die ook nauwelijks converteren. Als hier een affiliate achter zit die per klik of per sessie afrekent, betaal je voor lucht.</p>
+      </div>
+    </div>
+    <div class="finding warn">
+      <div class="ico"></div>
+      <div>
+        <h5>San Jose, Council Bluffs en Ashburn zijn geen klanten</h5>
+        <p>Dat zijn de plaatsen waar de grote cloudregio&rsquo;s staan. Verkeer daarvandaan is vrijwel altijd geautomatiseerd. Jullie omzet is volledig in euro, dus er komen ook geen Amerikaanse orders tegenover te staan.</p>
+      </div>
+    </div>
+    <div class="finding good">
+      <div class="ico"></div>
+      <div>
+        <h5>Je conversieratio is dus beter dan gerapporteerd</h5>
+        <p>Filter je alleen het Amerikaanse verkeer eruit, dan gaat de conversieratio van 4,49% naar 4,84%. Dat is geen cosmetica: het verandert welke pagina&rsquo;s en campagnes je als zwak bestempelt.</p>
+      </div>
+    </div>
+  </div>
+
+  <details class="more">
+    <summary>Wat we concreet gaan doen</summary>
+    <div class="more-body">
+      <ul class="bullets">
+        <li><div>Uitzoeken wie er achter secprf2 zit <span>via de Adtraction-rapportage en de UTM-parameters op die sessies.</span></div></li>
+        <li><div>Bot-filtering aanzetten <span>in Shopify Analytics en in GA4, zodat je rapportages niet meer vervuild zijn.</span></div></li>
+        <li><div>Vergelijken v&oacute;&oacute;r en n&aacute; <span>zodat je weet welk deel van je conversieratio winst is en welk deel opschoning.</span></div></li>
+        <li><div>Controleren of Google Ads dit verkeer ook ziet, <span>want klikfraudefilters vangen niet alles en je betaalt wel voor die klikken.</span></div></li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<section class="slide auto" id="retentie">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">10</div>
+    <div>
+      <h2 class="heading" style="margin:0;">E-mail draait wel, maar <span class="grad">niemand ziet het.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    In mijn vorige versie stond dat er twee orders uit e-mail kwamen. Dat was verkeerd. GA4 telt &euro;36.067 in Nederland en &euro;32.239 in Duitsland, samen &euro;68.306. In beide markten is het per sessie een van de sterkste kanalen die jullie hebben. Shopify ziet er twee orders van, en dat verschil is het probleem.
+  </p>
+
+  <div class="device-stat">
+    <div class="stat">
+      <div class="small">Volgens Shopify</div>
+      <div class="big">2</div>
+      <div class="hint">Orders met e-mail als bron &middot; die omzet zit verstopt in direct</div>
+    </div>
+    <div class="stat highlight">
+      <div class="small">Volgens GA4</div>
+      <div class="big">&euro;36.067</div>
+      <div class="hint">Omzet uit e-mail &middot; 27.561 sessies &agrave; &euro;1,31</div>
+    </div>
+  </div>
+
+  <div class="split" style="margin-top: 30px;">
+    <div>
+      <h3 class="sub" style="margin-top:0;">Wat dit betekent</h3>
+      <div class="findings">
+        <div class="finding good">
+          <div class="ico"></div>
+          <div>
+            <h5>In Duitsland verslaat e-mail zelfs betaald zoeken</h5>
+            <p>&euro;1,83 per sessie tegen &euro;1,44 voor Paid Search. In Nederland is het &euro;1,31 tegen &euro;1,42, dus vrijwel gelijk. Alleen kost een e-mailsessie je vrijwel niets.</p>
+          </div>
+        </div>
+        <div class="finding warn">
+          <div class="ico"></div>
+          <div>
+            <h5>De tagging klopt niet</h5>
+            <p>Shopify herkent de e-maillinks niet als bron, dus in de orderrapportage komt die omzet binnen als direct. Daardoor lijkt direct groter dan het is en e-mail vrijwel nul. Dat is een kwestie van UTM-parameters in de mailtemplates.</p>
+          </div>
+        </div>
+        <div class="finding warn">
+          <div class="ico"></div>
+          <div>
+            <h5>Dus stuurde je op een verkeerd beeld</h5>
+            <p>Als e-mail onzichtbaar is, krijgt het geen budget, geen aandacht en geen doorontwikkeling. Terwijl het na Paid Search en direct het sterkste kanaal per sessie is.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="table-wrap">
+        <table class="kpi">
+          <thead>
+            <tr>
+              <th>Kanaal (GA4, heel jaar)</th>
+              <th style="text-align:right;">Sessies</th>
+              <th style="text-align:right;">Omzet</th>
+              <th style="text-align:right;">Per sessie</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Paid Search</td><td class="num">188.952</td><td class="num">&euro;268.474</td><td class="num">&euro;1,42</td></tr>
+            <tr><td>Direct</td><td class="num">32.137</td><td class="num">&euro;53.261</td><td class="num pos">&euro;1,66</td></tr>
+            <tr><td>Organic Search</td><td class="num">42.541</td><td class="num">&euro;41.786</td><td class="num">&euro;0,98</td></tr>
+            <tr><td><strong>E-mail</strong></td><td class="num"><strong>27.561</strong></td><td class="num"><strong>&euro;36.067</strong></td><td class="num pos"><strong>&euro;1,31</strong></td></tr>
+            <tr><td>Paid Social</td><td class="num">15.842</td><td class="num">&euro;6.930</td><td class="num neg">&euro;0,44</td></tr>
+            <tr><td>Paid Shopping</td><td class="num">5.513</td><td class="num">&euro;2.426</td><td class="num neg">&euro;0,44</td></tr>
+            <tr><td>Paid Other</td><td class="num">5.590</td><td class="num">&euro;4.159</td><td class="num neg">&euro;0,74</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout" style="margin-top: 20px;">
+        <strong>Kleine uitschieter:</strong> AI Assistant levert in Nederland 152 sessies op tegen &euro;2,41 per sessie, in Duitsland 111 tegen &euro;1,80. Nog te klein om iets mee te doen, groot genoeg om vanaf nu apart bij te houden.
+      </div>
+    </div>
+  </div>
+
+  <details class="more">
+    <summary>Wat ik hiermee zou doen</summary>
+    <div class="more-body">
+      <ul class="bullets">
+        <li><div><strong>Eerst tagging:</strong> <span>UTM-parameters in alle mailtemplates, zodat Shopify en GA4 hetzelfde zeggen. Zonder die stap blijft elke discussie over e-mail een welles-nietes.</span></div></li>
+        <li><div><strong>Dan de flows nalopen:</strong> <span>draait er al een verlaten-winkelwagenflow? 5.777 sessies komen tot de winkelwagen maar niet tot de checkout, en 2.557 halen de checkout zonder af te rekenen.</span></div></li>
+        <li><div><strong>Dan post-purchase:</strong> <span>de juni-cohort komt tussen maand 1 en 2 terug, dus zes tot acht weken na aankoop is het juiste venster voor een tweede bandje in een andere kleur.</span></div></li>
+        <li><div><strong>Meetellen in de MER:</strong> <span>de kosten van jullie mailtool horen in de blended noemer. Bij &euro;68.306 aan omzet over beide markten is dat een verwaarloosbare post, maar het hoort er wel in.</span></div></li>
+      </ul>
+      <p style="margin-top:14px;">Let op de periode: deze GA4-cijfers lopen van 1 januari tot 10 augustus en bevatten dus ook de oude webshop. De verhoudingen tussen kanalen zijn bruikbaar, de absolute bedragen niet vergelijkbaar met de 54 dagen elders in dit deck.</p>
+    </div>
+  </details>
+</section>
+
+<section class="slide auto" id="optimalisaties">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">11</div>
+    <div>
+      <h2 class="heading" style="margin:0;">Zeventien ingrepen in het <span class="grad">account.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    Op volgorde van prioriteit. De eerste vier gaan over meten, want zolang de cijfers niet kloppen is elke budgetverschuiving een gok.
+  </p>
+
+  <div class="table-wrap" style="max-width: 1100px;">
+    <table class="kpi">
+      <thead>
+        <tr>
+          <th>Ingreep</th>
+          <th>Wat we doen</th>
+          <th style="text-align:right;">Verwacht effect</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Conversie-imports repareren</strong></td><td>52% faalt op een conversieactie die niet gevonden wordt. Eerst dit, dan de rest</td><td class="num pos">Bidding herstelt</td></tr>
+        <tr><td><strong>&Eacute;&eacute;n primaire omzetbron</strong></td><td>Browser of Booster, niet allebei. Nu telt het doelenoverzicht 1.566 en de campagnetabel 1.303</td><td class="num pos">Eenduidig sturen</td></tr>
+        <tr><td><strong>PMax NL productuitsluiting</strong></td><td>Het kanaalrapport zegt dat alle producten uitgesloten zijn in een campagne die All products heet</td><td class="num pos">Mogelijk groot</td></tr>
+        <tr><td><strong>V&oacute;&oacute;r en n&aacute; 28 juli</strong></td><td>De tROAS ging NL van 210 naar 215% en BE van 200 naar 205%. Apart beoordelen</td><td class="num">Inzicht</td></tr>
+        <tr><td><strong>Shopping Brand Only pauzeren</strong></td><td>POAS 0,93, dus verlieslatend ondanks een ROAS van 1,95</td><td class="num pos">Verlies stopt</td></tr>
+        <tr><td><strong>Search Apple MOF BE pauzeren</strong></td><td>POAS 0,91 en CPA &euro;20,14 tegen &euro;23,59 netto per order</td><td class="num pos">Verlies stopt</td></tr>
+        <tr><td><strong>Brand Only tROAS-test uitrollen</strong></td><td>POAS 1,20 tegen 0,93 voor de basiscampagne. Dit werkt aantoonbaar</td><td class="num pos">Marge omhoog</td></tr>
+        <tr><td><strong>DSA NL volledig uit</strong></td><td>ROAS 1,59 en CPA &euro;22,90. Het budget staat al op &euro;20, maak er nul van</td><td class="num pos">Verlies stopt</td></tr>
+        <tr><td><strong>Zoektermen uitsluiten</strong></td><td>Smartwatchbanden kost &euro;54,94 per conversie, generieke Belgische PMax-termen &euro;44 tot &euro;49</td><td class="num pos">CPA omlaag</td></tr>
+        <tr><td><strong>Custom labels op marge</strong></td><td>ProfitMetrics-marge per artikel in de feed, Shopping splitsen per bucket</td><td class="num pos">Structureel</td></tr>
+        <tr><td><strong>Shopping DE pauzeren</strong></td><td>ROAS 0,55 op Googles eigen cijfers. &euro;3.729 spend voor &euro;2.047 waarde</td><td class="num pos">Verlies stopt</td></tr>
+        <tr><td><strong>Search non-branded DE pauzeren</strong></td><td>ROAS 0,92, en het staat niet eens in de campagne-export</td><td class="num pos">Verlies stopt</td></tr>
+        <tr><td><strong>Beide accounts samen rapporteren</strong></td><td>Los bekeken zag je 4,57, samen 2,63. Dat verschil mag nooit meer ontstaan</td><td class="num pos">Eerlijk beeld</td></tr>
+        <tr><td><strong>Branded uit de rapportage</strong></td><td>Eigen budget, eigen doel, en uit elke vergelijking. Nu maakt het Search 4,60 terwijl non-branded op 1,75 staat</td><td class="num pos">Eerlijk beeld</td></tr>
+        <tr><td><strong>UTM-tagging op e-mail</strong></td><td>GA4 ziet &euro;36.067, Shopify twee orders. Zonder tagging stuur je op een kanaal dat onzichtbaar is</td><td class="num pos">Direct</td></tr>
+        <tr><td><strong>Dubbele Duitse etalage</strong></td><td>40.524 Duitsers landen op de NL-winkel terwijl er een eigen Duitse shop draait. Kies er een</td><td class="num pos">Urgent</td></tr>
+        <tr><td><strong>Botverkeer filteren</strong></td><td>secprf2 uitzoeken en bot-filtering aanzetten. 11% van je sessies levert vrijwel niets op</td><td class="num pos">Zuiver meten</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>Bewust niet in deze lijst:</strong> Merkenlijst opschalen. Google meldt &euro;6.220 aan gemiste omzet door budget, maar de campagne draait op POAS 1,19. Meer volume tegen die marge is geen winst maar drukte. Eerst de labels, dan pas het budget.
+  </div>
+</section>
+
+<section class="slide" id="meta">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">12</div>
+    <div>
+      <h2 class="heading" style="margin:0;">Meta: schalen, stoppen of <span class="grad">bewijzen.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    Meta claimt 423 aankopen tegen &euro;5,40 per stuk. Shopify ziet er 123, wat neerkomt op &euro;18,56 per order. Bij &euro;23,67 netto blijft er dan &euro;5,11 over, en dat is te weinig zodra de inkoopprijs erbij komt. Maar last-click is oneerlijk voor social, dus ik wil dit niet op &eacute;&eacute;n cijfer afrekenen.
+  </p>
+
+  <div class="grid" style="margin-top: 26px;">
+    <div class="card accent">
+      <div class="label">Optie 01</div>
+      <h4>Geo-holdout van drie weken</h4>
+      <p>Zet Meta uit in de helft van de provincies en laat het elders draaien. Vergelijk daarna de totale omzet per gebied. Dit is de enige manier om de werkelijke bijdrage te meten, en het kost alleen tijd.</p>
+    </div>
+    <div class="card">
+      <div class="label">Optie 02</div>
+      <h4>Afbouwen zonder herbesteden</h4>
+      <p>Meta terugbrengen en het geld niet elders inzetten. De MER stijgt gegarandeerd, want je haalt kosten uit de noemer. De vraag is of de omzet meebeweegt. Feitelijk is dit een holdout zonder controlegroep, dus minder scherp dan optie 1.</p>
+    </div>
+    <div class="card">
+      <div class="label">Optie 03</div>
+      <h4>Eerst de meting repareren</h4>
+      <p>Conversiewaarde aanzetten in de export en de Conversions API koppelen. Zonder waarde blijft elk oordeel over Meta een gok, precies zoals bij Google nu het geval is.</p>
+    </div>
+  </div>
+
+  <details class="more">
+    <summary>Nog een cijfer dat tegen Meta pleit</summary>
+    <div class="more-body">
+      <p>Facebook levert 4.729 sessies op met een conversieratio van 1,86% en &euro;0,38 netto omzet per sessie. Google search zit op 4,75% en &euro;1,05. Instagram doet het met 2,75% en &euro;0,62 iets beter dan Facebook, maar blijft ver onder search.</p>
+      <p>Reken je de Meta-spend van &euro;2.283 om over die 4.729 sessies, dan kost een sessie &euro;0,48 terwijl hij &euro;0,38 opbrengt. Op last-click sta je dus per sessie al onder water, nog v&oacute;&oacute;r de inkoopprijs.</p>
+      <p>GA4 wijst dezelfde kant op: Paid Social levert over heel het jaar &euro;6.930 aan omzet op 15.842 sessies, oftewel &euro;0,44 per sessie tegen &euro;1,42 voor Paid Search. Zet je die &euro;6.930 naast de &euro;7.850 die Meta in dezelfde periode kostte, dan sta je op een ROAS van 0,88 inclusief btw. Drie bronnen, hetzelfde beeld.</p>
+      <p>Waarom ik het toch niet meteen zou stoppen: die sessies bevatten ook organisch verkeer, en social wordt door last-click structureel ondergewaardeerd. Vandaar de holdout, want die meet w&eacute;l wat er gebeurt als je het uitzet.</p>
+    </div>
+  </details>
+
+  <div class="callout">
+    <strong>Wat geen optie is:</strong> dit budget naar branded Search verschuiven. Branded oogst zoekopdrachten waarin jullie merknaam al staat, en Meta is juist een van de kanalen die die zoekopdracht veroorzaakt. Je zou dan de kraan dichtdraaien om meer te betalen voor het water dat er nog uit komt. Branded schaalt bovendien niet op budget, alleen op merkbekendheid.
+  </div>
+
+  <div class="callout" style="margin-top: 14px;">
+    <strong>Mijn advies:</strong> optie 3 deze week, optie 1 daarna. Meta is met 7% van jullie mediabudget te klein om ruzie over te maken en te interessant om blind te schrappen.
+  </div>
+</section>
+
+<section class="slide auto" id="mer">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">13</div>
+    <div>
+      <h2 class="heading" style="margin:0;">De MER, nu met <span class="grad">echte spend.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    Dit gaat over de Nederlandse winkel. De teller staat vast op &euro;146.451 netto omzet uit Shopify. De noemer is &euro;29.747 voor NL en Belgi&euml; plus &euro;2.283 voor Meta. Duitsland heeft een eigen winkel en een eigen MER, en die staat in hoofdstuk zes.
+  </p>
+
+  <div class="split">
+    <div>
+      <div class="table-wrap">
+        <table class="kpi">
+          <thead>
+            <tr>
+              <th>Wat we meetellen</th>
+              <th style="text-align:right;">Spend</th>
+              <th style="text-align:right;">MER</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Google NL/BE plus Meta (paid MER)</strong></td><td class="num"><strong>&euro;32.030</strong></td><td class="num pos"><strong>4,57</strong></td></tr>
+            <tr><td>Plus affiliatecommissie</td><td class="num">&euro;32.530</td><td class="num">4,50</td></tr>
+            <tr><td>Plus Microsoft Ads</td><td class="num">&euro;34.030</td><td class="num">4,30</td></tr>
+            <tr><td>Plus bureaukosten</td><td class="num">&euro;36.030</td><td class="num">4,06</td></tr>
+            <tr><td>Plus mailtool en overige</td><td class="num">&euro;37.030</td><td class="num">3,95</td></tr>
+            <tr><td><strong>Alles samen (blended NL)</strong></td><td class="num"><strong>&euro;39.030</strong></td><td class="num"><strong>3,75</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="body" style="margin-top:18px;">
+        De onderste regels zijn schattingen tot jullie de cijfers aanleveren. Merk op dat GA4 over het hele jaar op 2,86 uitkomt voor deze markt. Dat verschil met 4,57 komt door de periode (GA4 telt ook de oude winkel mee, met hogere spend) en doordat GA4 minder omzet ziet dan de backend.
+      </p>
+    </div>
+    <div>
+      <h3 class="sub" style="margin-top:0;">Break-even per marge</h3>
+      <div class="table-wrap">
+        <table class="kpi">
+          <thead>
+            <tr>
+              <th>Brutomarge</th>
+              <th style="text-align:right;">Break-even</th>
+              <th style="text-align:right;">Bij 3,75</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>25%</td><td class="num">4,00</td><td class="num neg">Net onder</td></tr>
+            <tr><td>30%</td><td class="num">3,33</td><td class="num pos">Ruimte</td></tr>
+            <tr><td>35%</td><td class="num">2,86</td><td class="num pos">Comfortabel</td></tr>
+            <tr><td>40%</td><td class="num">2,50</td><td class="num pos">Ruim</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <details class="more">
+        <summary>Hoe ik aan de spend kom</summary>
+        <div class="more-body">
+          <p>De 30-daagse rapportage geeft &euro;16.474 voor 12 juli tot 10 augustus en &euro;16.591 voor de dertig dagen daarvoor, dus 12 juni tot 11 juli. Mijn venster loopt van 18 juni tot 10 augustus.</p>
+          <p>Ik neem daarom 24 van die 30 dagen uit de eerste periode (&euro;13.273) plus de volledige tweede periode (&euro;16.474), samen &euro;29.747. Dat is nog steeds een verdeling binnen die eerste maand, maar over dertig dagen in plaats van over een heel jaar. Daarmee is de onnauwkeurigheid teruggebracht van maanden naar dagen.</p>
+          <p>Voor Meta neem ik &euro;2.283, de drie campagnes met Shopify in de naam plus de Amsterdam-print campagne, want die zijn na de migratie opgezet.</p>
+        </div>
+      </details>
+
+      <div class="callout" style="margin-top: 20px;">
+        <strong>Dit is de kern:</strong> volledig doorgerekend staat Nederland op 3,75 en dat is gezond bij 30% marge. De groeps-MER van 2,76 is krapper, want Duitsland trekt hem omlaag. Maar het gemiddelde verbergt de spreiding: twee Duitse campagnes staan onder ROAS 1,00, twee Nederlandse onder POAS 1,00, en een kwart van de bruto omzet gaat op aan korting. Daar zit de winst, niet in meer budget.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide auto" id="routes">
+  <div class="gradient-line"></div>
+  <div class="chapter-head">
+    <div class="num">14</div>
+    <div>
+      <h2 class="heading" style="margin:0;">Drie richtingen voor het <span class="grad">komende kwartaal.</span></h2>
+    </div>
+  </div>
+  <p class="lead">
+    Uiteindelijk komt het neer op een keuze: waar sturen we op. Hieronder wat elke richting oplevert en wat je ervoor inlevert.
+  </p>
+
+  <div class="grid" style="margin-top: 26px;">
+    <div class="card accent">
+      <div class="label">Route A &middot; Aanbevolen</div>
+      <h4>Meten, dan marge</h4>
+      <p>Eerst de conversie-imports, de dubbele omzetactie en de branded-vertekening eruit, dan de verlieslatende campagnes in b&eacute;ide accounts uit en de feedlabels erin. De omzet zakt tijdelijk met naar schatting 5%, maar je stuurt daarna op POAS in plaats van op ROAS, over beide markten tegelijk. Na zes weken staan er twee accounts die je kunt vertrouwen.</p>
+    </div>
+    <div class="card">
+      <div class="label">Route B</div>
+      <h4>Volume eerst</h4>
+      <p>Budgetten omhoog waar campagnes tegen hun plafond zitten. Google schat &euro;9.184 aan gemiste omzet in dertig dagen, dus er is ruimte. Snelle groei, maar Merkenlijst draait op POAS 1,19 en je vergroot dan een marge die net boven break-even ligt.</p>
+    </div>
+    <div class="card">
+      <div class="label">Route C</div>
+      <h4>Duitsland repareren</h4>
+      <p>Het Duitse account is 39% van je budget en draait op MER 2,59 tegen 2,86 in Nederland, met twee campagnes onder ROAS 1,00. Hier ligt in absolute euro&rsquo;s de grootste winst, maar het is reparatie en geen groei. Loopt mee met route A zodra de margelabels er zijn.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Waarom A:</strong> route B vergroot een probleem dat we nog niet hebben opgelost, en zolang Smart Bidding conversies mist is elke budgetverhoging een verhoging bovenop een verkeerd signaal. Route C is geen alternatief maar een onderdeel van A, want de Duitse campagnes hebben exact dezelfde feed- en margefix nodig als de Nederlandse.
+  </div>
+</section>
+
+<section class="slide auto" id="roadmap">
+  <div class="gradient-line"></div>
+  <h2 class="heading">Zo pakken wij het de komende <span class="grad">negentig dagen aan.</span></h2>
+  <p class="lead">
+    Alles wat geen extra mediabudget kost, staat vooraan.
+  </p>
+
+  <div>
+    <div class="sum-row">
+      <div class="num">01</div>
+      <div>
+        <h4>Week 1 &middot; Meting repareren</h4>
+        <p>Conversie-imports opschonen, &eacute;&eacute;n primaire omzetactie kiezen, add-to-cart en begin-checkout goed zetten, PMax-productuitsluitingen in beide accounts controleren, UTM-tagging op e-mail in beide markten, en beide markten in &eacute;&eacute;n rapportage naast elkaar zetten.</p>
+      </div>
+    </div>
+    <div class="sum-row">
+      <div class="num">02</div>
+      <div>
+        <h4>Week 1 &middot; Verlies stoppen</h4>
+        <p>In NL: Shopping Brand Only en Search Apple MOF BE op POAS onder 1,00, DSA naar nul. In DE: Shopping en non-branded Search pauzeren op ROAS 0,55 en 0,92. Zwakke zoektermen uitsluiten.</p>
+      </div>
+    </div>
+    <div class="sum-row">
+      <div class="num">03</div>
+      <div>
+        <h4>Week 2 &middot; Vóór en ná 28 juli</h4>
+        <p>De tROAS-wijziging apart beoordelen zodra de meting klopt. Nu is niet te zeggen of de daling echt is of ingebeeld.</p>
+      </div>
+    </div>
+    <div class="sum-row">
+      <div class="num">04</div>
+      <div>
+        <h4>Week 2 tot 4 &middot; Prijstest</h4>
+        <p>Zeven van de veertien artikelen op halve korting, zeven ongewijzigd als controlegroep. Parallel de voorraadfeed opschonen.</p>
+      </div>
+    </div>
+    <div class="sum-row">
+      <div class="num">05</div>
+      <div>
+        <h4>Week 3 tot 6 &middot; Feed en structuur</h4>
+        <p>ProfitMetrics-marge als custom label in de feed, Shopping splitsen per bucket, Brand Only tROAS-test uitrollen, branded apart rapporteren.</p>
+      </div>
+    </div>
+    <div class="sum-row">
+      <div class="num">06</div>
+      <div>
+        <h4>Week 4 tot 7 &middot; Checkout en Meta-holdout</h4>
+        <p>Tablet en mobiele checkout testen op verzenddrempel en express betalen. Parallel de geo-holdout voor Meta van drie weken.</p>
+      </div>
+    </div>
+    <div class="sum-row">
+      <div class="num">07</div>
+      <div>
+        <h4>Week 5 tot 8 &middot; Retentie opzetten</h4>
+        <p>Vier e-mailflows met UTM-tagging: verlaten winkelwagen, verlaten checkout, post-purchase kleurenserie en een terugkeermoment na zes weken.</p>
+      </div>
+    </div>
+    <div class="sum-row">
+      <div class="num">08</div>
+      <div>
+        <h4>Week 8 tot 12 &middot; Duitsland heropbouwen</h4>
+        <p>Duitse feed met dezelfde margelabels, PMax herstructureren rond de best bijdragende artikelen, de dubbele etalage oplossen, en pas opnieuw Shopping starten als de feed klopt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="volgendestap">
+  <div class="gradient-line"></div>
+  <h2 class="heading">Eerst weten wat waar is, dan <span class="grad">opschalen.</span></h2>
+  <p class="lead">
+    Nederland op 4,57, Duitsland op 2,59, de groep op 2,76. Dat zijn werkbare cijfers, en de attributie blijkt met een factor 1,25 netter dan ik dacht. Het werk zit dus niet in de MER maar eronder: een kwart van de bruto omzet verdwijnt in korting op veertien artikelen, vier campagnes over twee markten draaien onder break-even, en het Nederlandse account meldt een daling die niet bestaat. Eerst meten, dan marge, dan pas groei.
+  </p>
+
+  <div class="cta-row">
+    <a class="cta" href="https://www.tryaizy.com/">Plan vervolgafspraak</a>
+    <a class="cta ghost" href="#top">Terug naar boven</a>
+  </div>
+</section>
+<footer>
+  Aizy &middot; AI marketing made aizy &middot; aizy.com
+</footer>
+
+</body>
+</html>
